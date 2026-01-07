@@ -18,8 +18,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Outfit", "sans-serif"],
-        display: ["Cormorant Garamond", "serif"],
+        sans: ["DM Sans", "sans-serif"],
+        display: ["Playfair Display", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -72,6 +72,11 @@ export default {
           DEFAULT: "hsl(var(--cream))",
           dark: "hsl(var(--cream-dark))",
         },
+        teal: {
+          DEFAULT: "hsl(var(--teal))",
+          light: "hsl(var(--teal-light))",
+          dark: "hsl(var(--teal-dark))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -87,12 +92,15 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        "2xl": "1.5rem",
+        "3xl": "2rem",
       },
       boxShadow: {
         sm: "var(--shadow-sm)",
         card: "var(--shadow-card)",
         "card-hover": "var(--shadow-card-hover)",
-        gold: "var(--shadow-gold)",
+        gold: "var(--shadow-teal)",
+        teal: "var(--shadow-teal)",
       },
       keyframes: {
         "accordion-down": {
@@ -109,7 +117,7 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       backgroundImage: {
-        "gradient-gold": "var(--gradient-gold)",
+        "gradient-teal": "var(--gradient-teal)",
         "gradient-shimmer": "var(--gradient-shimmer)",
       },
     },
