@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Compass } from "lucide-react";
 
 const navLinks = [
   { name: "Destinations", href: "#destinations" },
@@ -24,8 +24,8 @@ const Header = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled
-          ? "bg-transparent backdrop-blur-lg py-3 shadow-card"
-          : "bg-transparent py-5"
+          ? "bg-card/95 backdrop-blur-xl py-3 shadow-card border-b border-border/50"
+          : "bg-transparent py-6"
       }`}
     >
       <div className="container mx-auto px-6">
@@ -33,78 +33,75 @@ const Header = () => {
           {/* Logo */}
           <a href="#" className="flex items-center gap-3 group">
             <div className="relative">
-              <div className={`w-10 h-10 md:w-12 md:h-12 border-2 rounded-full flex items-center justify-center transition-colors duration-300 ${
-                isScrolled ? "border-primary" : "border-primary"
-              } group-hover:border-gold-light`}>
-                <span className={`font-display text-lg md:text-xl font-semibold transition-colors duration-300 ${
-                  isScrolled ? "text-primary" : "text-primary"
-                } group-hover:text-gold-light`}>
-                  LC
-                </span>
+              <div className={`w-11 h-11 md:w-12 md:h-12 bg-primary rounded-xl flex items-center justify-center transition-all duration-300 group-hover:rounded-2xl group-hover:scale-105 shadow-teal`}>
+                <Compass className={`w-5 h-5 md:w-6 md:h-6 text-primary-foreground transition-transform duration-300 group-hover:rotate-45`} />
               </div>
             </div>
             <div className="flex flex-col">
-              <span className={`text-lg md:text-xl font-display font-semibold tracking-[0.15em] transition-colors duration-300 ${
-                isScrolled ? "text-primary" : "text-header-foreground"
+              <span className={`text-xl md:text-2xl font-display font-semibold tracking-tight transition-colors duration-300 ${
+                isScrolled ? "text-foreground" : "text-card"
               }`}>
                 LoonCamp
               </span>
-              <span className={`text-[10px] tracking-[0.2em] uppercase transition-colors duration-300 ${
-                isScrolled ? "text-primary/60" : "text-header-foreground/50"
+              <span className={`text-[10px] tracking-[0.15em] uppercase font-medium transition-colors duration-300 ${
+                isScrolled ? "text-muted-foreground" : "text-card/70"
               }`}>
-                Luxury Escapes
+                Nature Retreats
               </span>
             </div>
           </a>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-10">
+          <nav className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                className={`relative text-sm font-medium tracking-wide transition-all duration-300 group ${
-                  isScrolled ? "text-primary/80 hover:text-primary" : "text-header-foreground/80 hover:text-header-foreground"
+                className={`relative px-5 py-2.5 text-sm font-medium tracking-wide transition-all duration-300 rounded-full ${
+                  isScrolled 
+                    ? "text-foreground/70 hover:text-foreground hover:bg-secondary" 
+                    : "text-card/80 hover:text-card hover:bg-card/10"
                 }`}
               >
                 {link.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-px bg-primary group-hover:w-full transition-all duration-300" />
               </a>
             ))}
             <a
               href="#properties"
-              className="ml-4 px-6 py-2.5 bg-primary text-primary-foreground text-sm font-medium tracking-wide rounded-full hover:bg-gold-light transition-all duration-300 hover:shadow-gold"
+              className="ml-4 px-7 py-3 bg-primary text-primary-foreground text-sm font-semibold tracking-wide rounded-full hover:bg-teal-light transition-all duration-300 shadow-teal hover:shadow-card-hover hover:scale-105"
             >
-              Book Now
+              Explore Now
             </a>
           </nav>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={`lg:hidden p-2 transition-colors duration-300 ${
-              isScrolled ? "text-primary hover:text-primary/80" : "text-header-foreground hover:text-primary"
+            className={`lg:hidden p-2.5 rounded-xl transition-all duration-300 ${
+              isScrolled 
+                ? "text-foreground hover:bg-secondary" 
+                : "text-card hover:bg-card/10"
             }`}
             aria-label="Toggle menu"
           >
-            {isMenuOpen ? <X size={26} /> : <Menu size={26} />}
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
         {/* Mobile Navigation */}
         <div
-          className={`lg:hidden overflow-hidden transition-all duration-500 ease-out bg-white rounded-b-2xl shadow-xl ${
-            isMenuOpen ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
+          className={`lg:hidden overflow-hidden transition-all duration-500 ease-out ${
+            isMenuOpen ? "max-h-[400px] opacity-100 mt-6" : "max-h-0 opacity-0"
           }`}
         >
-          <nav className="py-6 px-4">
+          <nav className="bg-card rounded-2xl shadow-card-hover border border-border/50 p-4">
             <div className="flex flex-col gap-1">
               {navLinks.map((link, index) => (
                 <a
                   key={link.name}
                   href={link.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="text-primary/90 hover:text-primary hover:bg-primary/5 text-base font-medium tracking-wide py-3.5 px-5 rounded-xl transition-all duration-300"
+                  className="text-foreground/80 hover:text-foreground hover:bg-secondary text-base font-medium py-3.5 px-5 rounded-xl transition-all duration-300"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   {link.name}
@@ -113,9 +110,9 @@ const Header = () => {
               <a
                 href="#properties"
                 onClick={() => setIsMenuOpen(false)}
-                className="mt-6 mx-4 px-6 py-3.5 bg-primary text-primary-foreground text-center text-sm font-medium tracking-wide rounded-full hover:bg-gold-light transition-all duration-300 shadow-lg shadow-primary/20"
+                className="mt-4 px-6 py-4 bg-primary text-primary-foreground text-center font-semibold tracking-wide rounded-xl hover:bg-teal-light transition-all duration-300 shadow-teal"
               >
-                Book Now
+                Explore Now
               </a>
             </div>
           </nav>
