@@ -18,8 +18,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["DM Sans", "sans-serif"],
-        display: ["Playfair Display", "serif"],
+        sans: ["Outfit", "sans-serif"],
+        display: ["Cormorant Garamond", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -64,18 +64,13 @@ export default {
           light: "hsl(var(--gold-light))",
           dark: "hsl(var(--gold-dark))",
         },
-        navy: {
-          DEFAULT: "hsl(var(--navy))",
-          light: "hsl(var(--navy-light))",
+        charcoal: {
+          DEFAULT: "hsl(var(--charcoal))",
+          light: "hsl(var(--charcoal-light))",
         },
         cream: {
           DEFAULT: "hsl(var(--cream))",
           dark: "hsl(var(--cream-dark))",
-        },
-        teal: {
-          DEFAULT: "hsl(var(--teal))",
-          light: "hsl(var(--teal-light))",
-          dark: "hsl(var(--teal-dark))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -92,15 +87,16 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
-        "2xl": "1.5rem",
-        "3xl": "2rem",
+        "2xl": "1rem",
+        "3xl": "1.5rem",
+        "4xl": "2rem",
       },
       boxShadow: {
         sm: "var(--shadow-sm)",
         card: "var(--shadow-card)",
         "card-hover": "var(--shadow-card-hover)",
-        gold: "var(--shadow-teal)",
-        teal: "var(--shadow-teal)",
+        gold: "var(--shadow-gold)",
+        "gold-lg": "var(--shadow-gold-lg)",
       },
       keyframes: {
         "accordion-down": {
@@ -117,8 +113,9 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       backgroundImage: {
-        "gradient-teal": "var(--gradient-teal)",
-        "gradient-shimmer": "var(--gradient-shimmer)",
+        "gradient-gold": "var(--gradient-gold)",
+        "gradient-dark": "var(--gradient-dark)",
+        "gradient-overlay": "var(--gradient-overlay)",
       },
     },
   },

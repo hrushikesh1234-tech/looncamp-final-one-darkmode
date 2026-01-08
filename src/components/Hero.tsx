@@ -1,95 +1,105 @@
-import { ArrowDown, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, MapPin, Star, Play } from "lucide-react";
 import heroImage from "@/assets/hero-resort.jpg";
 
 const Hero = () => {
+  const scrollToProperties = () => {
+    document.querySelector("#properties")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
           src={heroImage}
-          alt="Luxury dome resort by the lake at sunset"
+          alt="Luxury camping experience"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-navy/50 via-navy/30 to-navy/60" />
-        <div className="absolute inset-0 bg-gradient-to-r from-navy/40 via-transparent to-navy/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50" />
       </div>
 
-      {/* Floating Shapes - Geometric accents */}
-      <div className="absolute top-1/4 left-[10%] w-20 h-20 border-2 border-primary/30 rounded-full animate-float delay-200" />
-      <div className="absolute top-1/3 right-[15%] w-12 h-12 bg-primary/20 rounded-xl rotate-45 animate-float delay-500" />
-      <div className="absolute bottom-1/3 left-[5%] w-8 h-8 bg-primary/30 rounded-lg animate-bounce-gentle" />
-
       {/* Content */}
-      <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-card/10 backdrop-blur-md rounded-full border border-card/20 mb-8 animate-fade-up">
-          <Sparkles className="w-4 h-4 text-primary" />
-          <span className="text-card text-sm font-medium tracking-wide">
-            Premium Nature Escapes
-          </span>
-        </div>
+      <div className="container mx-auto px-6 relative z-10 pt-20">
+        <div className="max-w-3xl">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/10 backdrop-blur-sm mb-8 opacity-0 animate-fade-up">
+            <Star className="w-4 h-4 text-primary fill-primary" />
+            <span className="text-sm font-medium text-primary">Premium Luxury Stays</span>
+          </div>
 
-        {/* Main Title */}
-        <div className="mb-6 animate-fade-up delay-100">
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-semibold text-card tracking-tight leading-[1.1]">
-            Discover Your
-            <span className="block text-primary mt-2">Perfect Retreat</span>
+          {/* Main Title */}
+          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[0.9] mb-8 opacity-0 animate-fade-up delay-100">
+            <span className="text-foreground">Experience</span>
+            <br />
+            <span className="text-gradient-gold italic">Extraordinary</span>
+            <br />
+            <span className="text-foreground">Getaways</span>
           </h1>
+
+          {/* Subtitle */}
+          <p className="text-lg md:text-xl text-muted-foreground max-w-xl mb-10 opacity-0 animate-fade-up delay-200 font-light leading-relaxed">
+            Discover handpicked luxury glamping domes, hillside villas, and lakeside cottages 
+            near Pawna Lake and Lonavala. Your perfect escape awaits.
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-wrap gap-4 mb-16 opacity-0 animate-fade-up delay-300">
+            <Button
+              onClick={scrollToProperties}
+              size="lg"
+              className="bg-gradient-to-r from-primary to-gold-light text-primary-foreground hover:opacity-90 font-semibold px-8 h-14 text-lg shadow-gold gap-2 group"
+            >
+              Explore Properties
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-foreground/20 text-foreground hover:bg-foreground/5 font-medium px-8 h-14 text-lg gap-2"
+              onClick={() => window.open("https://www.youtube.com/watch?v=example", "_blank")}
+            >
+              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                <Play className="w-4 h-4 text-primary fill-primary" />
+              </div>
+              Watch Video
+            </Button>
+          </div>
+
+          {/* Stats */}
+          <div className="flex flex-wrap gap-8 md:gap-12 opacity-0 animate-fade-up delay-400">
+            <div className="flex flex-col">
+              <span className="font-display text-4xl md:text-5xl font-bold text-gradient-gold">50+</span>
+              <span className="text-sm text-muted-foreground mt-1">Luxury Properties</span>
+            </div>
+            <div className="w-px bg-border/50 hidden md:block" />
+            <div className="flex flex-col">
+              <span className="font-display text-4xl md:text-5xl font-bold text-gradient-gold">4.9</span>
+              <span className="text-sm text-muted-foreground mt-1">Guest Rating</span>
+            </div>
+            <div className="w-px bg-border/50 hidden md:block" />
+            <div className="flex flex-col">
+              <span className="font-display text-4xl md:text-5xl font-bold text-gradient-gold">10K+</span>
+              <span className="text-sm text-muted-foreground mt-1">Happy Guests</span>
+            </div>
+          </div>
         </div>
+      </div>
 
-        {/* Subtitle */}
-        <p className="text-card/80 text-lg md:text-xl lg:text-2xl font-normal max-w-2xl mx-auto mb-10 animate-fade-up delay-200">
-          Handpicked luxury cottages and camping experiences at Pawna Lake & Lonavala
-        </p>
-
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up delay-300">
-          <a
-            href="#properties"
-            className="group px-8 py-4 bg-primary text-primary-foreground font-semibold tracking-wide rounded-full hover:bg-teal-light transition-all duration-500 shadow-teal hover:shadow-card-hover hover:scale-105 flex items-center gap-2"
-          >
-            Browse Properties
-            <span className="group-hover:translate-x-1 transition-transform">→</span>
-          </a>
-          <a
-            href="#destinations"
-            className="px-8 py-4 bg-card/10 backdrop-blur-md text-card font-semibold tracking-wide rounded-full border border-card/30 hover:bg-card/20 hover:border-card/50 transition-all duration-500"
-          >
-            Explore Destinations
-          </a>
-        </div>
-
-        {/* Stats */}
-        <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 mt-16 animate-fade-up delay-400">
-          <div className="text-center">
-            <p className="text-3xl md:text-4xl font-display font-semibold text-primary">15+</p>
-            <p className="text-card/60 text-sm mt-1">Properties</p>
-          </div>
-          <div className="w-px h-12 bg-card/20 hidden sm:block" />
-          <div className="text-center">
-            <p className="text-3xl md:text-4xl font-display font-semibold text-primary">4.9</p>
-            <p className="text-card/60 text-sm mt-1">Avg Rating</p>
-          </div>
-          <div className="w-px h-12 bg-card/20 hidden sm:block" />
-          <div className="text-center">
-            <p className="text-3xl md:text-4xl font-display font-semibold text-primary">500+</p>
-            <p className="text-card/60 text-sm mt-1">Happy Guests</p>
-          </div>
+      {/* Location Tag - Bottom Right */}
+      <div className="absolute bottom-8 right-8 hidden lg:flex items-center gap-3 px-5 py-3 rounded-full glass border border-border/30">
+        <MapPin className="w-5 h-5 text-primary" />
+        <div className="flex flex-col">
+          <span className="text-xs text-muted-foreground">Featured Location</span>
+          <span className="text-sm font-medium text-foreground">Pawna Lake, Maharashtra</span>
         </div>
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
-        <a
-          href="#destinations"
-          className="flex flex-col items-center gap-3 text-card/60 hover:text-primary transition-colors duration-300 group"
-        >
-          <span className="text-xs tracking-[0.2em] uppercase font-medium">Scroll to explore</span>
-          <div className="w-10 h-10 rounded-full border-2 border-current flex items-center justify-center group-hover:border-primary transition-colors">
-            <ArrowDown size={18} className="animate-bounce" />
-          </div>
-        </a>
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-60">
+        <span className="text-xs uppercase tracking-widest text-muted-foreground">Scroll</span>
+        <div className="w-px h-12 bg-gradient-to-b from-primary to-transparent" />
       </div>
     </section>
   );
