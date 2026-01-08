@@ -1,71 +1,73 @@
-import { getOptimizedImageUrl } from "@/lib/cloudinary";
-import { Button } from "@/components/ui/button";
+import { Link, useNavigate } from "react-router-dom";
+import { Star, MapPin, ArrowUpRight, Share2, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Share2, Star, MapPin, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { getOptimizedImageUrl } from "@/lib/cloudinary";
 import { useState, useRef } from "react";
 
 interface PropertyCardProps {
   id?: string;
   slug?: string;
-  images?: string[];
   image: string;
+  images?: string[];
   title: string;
+  location?: string;
   price: string;
-  priceNote: string;
+  priceNote?: string;
+  rating?: number;
   amenities: string[];
+  category?: string;
   isTopSelling?: boolean;
   isAvailable?: boolean;
-  location?: string;
-  rating?: number;
 }
 
 const PropertyCard = ({
   id = "1",
   slug,
-  images,
   image,
+  images = [],
   title,
-  price,
-  priceNote,
-  amenities,
-  isTopSelling = false,
-  isAvailable = true,
   location = "Pawna Lake",
+  price,
+  priceNote = "person",
   rating = 4.9,
+  amenities,
+  category,
+  isTopSelling,
+  isAvailable = true,
 }: PropertyCardProps) => {
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
   
-  const propertyImages = images && images.length > 0 ? images : [image];
+  const displayImages = images.length > 0 ? images : [image];
   const navigationId = slug || id;
 
   const handleShare = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     const shareUrl = `${window.location.origin}/property/${navigationId}`;
-    const text = `🏡 *${title}*\n📍 ${location}\n💰 *${price}* ${priceNote}\n\nCheck out this beautiful property on LoonCamp:\n${shareUrl}`;
+    const text = `🏡 *${title}*\n📍 ${location}\n💰 *${price}* /${priceNote}\n\nCheck out this property:\n${shareUrl}`;
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   const handleBookNow = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    window.open(`https://api.whatsapp.com/send?phone=918669505727&text=I%27m%20interested%20in%20booking%20${encodeURIComponent(title)}`, '_blank');
+    window.open(`https://api.whatsapp.com/send?phone=918669505727&text=I'm interested in booking ${encodeURIComponent(title)}`, '_blank');
   };
 
   const nextImage = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setCurrentImageIndex((prev) => (prev === propertyImages.length - 1 ? 0 : prev + 1));
+    setCurrentImageIndex((prev) => (prev === displayImages.length - 1 ? 0 : prev + 1));
   };
 
   const prevImage = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setCurrentImageIndex((prev) => (prev === 0 ? propertyImages.length - 1 : prev - 1));
+    setCurrentImageIndex((prev) => (prev === 0 ? displayImages.length - 1 : prev - 1));
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -79,163 +81,159 @@ const PropertyCard = ({
   const handleTouchEnd = () => {
     if (!touchStartX.current || !touchEndX.current) return;
     const diff = touchStartX.current - touchEndX.current;
-    const minSwipeDistance = 50;
-
-    if (diff > minSwipeDistance) {
-      setCurrentImageIndex((prev) => (prev === propertyImages.length - 1 ? 0 : prev + 1));
-    } else if (diff < -minSwipeDistance) {
-      setCurrentImageIndex((prev) => (prev === 0 ? propertyImages.length - 1 : prev - 1));
+    if (diff > 50) {
+      setCurrentImageIndex((prev) => (prev === displayImages.length - 1 ? 0 : prev + 1));
+    } else if (diff < -50) {
+      setCurrentImageIndex((prev) => (prev === 0 ? displayImages.length - 1 : prev - 1));
     }
-
     touchStartX.current = null;
     touchEndX.current = null;
   };
 
   const handleNavigate = () => {
-    const activeTab = document.querySelector('[data-state="active"][data-testid^="button-tab-"]');
-    if (activeTab) {
-      const tabId = activeTab.getAttribute('data-testid')?.replace('button-tab-', '');
-      if (tabId) {
-        sessionStorage.setItem('activeCategoryTab', tabId);
-      }
-    }
     navigate(`/property/${navigationId}`);
   };
 
   return (
-    <div className="group h-full">
-      <div className="bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-500 hover:-translate-y-1 cursor-pointer h-full border border-border/50">
+    <div className="group h-full" onClick={handleNavigate}>
+      <div className="card-luxury bg-card rounded-3xl overflow-hidden border border-border/30 hover:border-primary/30 transition-all duration-500 cursor-pointer h-full">
+        {/* Image Container */}
         <div 
-          className="block h-full"
-          onClick={handleNavigate}
+          className="relative h-72 overflow-hidden"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
-          {/* Image Container */}
-          <div 
-            className="relative overflow-hidden aspect-[4/3]"
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-          >
-            <img
-              src={getOptimizedImageUrl(propertyImages[currentImageIndex], 600)}
-              alt={title}
-              className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
-              loading="lazy"
-            />
+          <img
+            src={getOptimizedImageUrl(displayImages[currentImageIndex], 600)}
+            alt={title}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          />
+          
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-            {/* Navigation Arrows */}
-            {propertyImages.length > 1 && (
-              <>
-                <button 
-                  onClick={prevImage}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-card/90 hover:bg-card text-foreground shadow-sm opacity-0 group-hover:opacity-100 transition-all duration-300 z-10"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button 
-                  onClick={nextImage}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-card/90 hover:bg-card text-foreground shadow-sm opacity-0 group-hover:opacity-100 transition-all duration-300 z-10"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-                
-                {/* Dots indicator */}
-                <div className="absolute bottom-14 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-                  {propertyImages.map((_, idx) => (
-                    <div 
-                      key={idx}
-                      className={`h-1.5 rounded-full transition-all duration-300 ${
-                        idx === currentImageIndex ? "bg-primary w-6" : "bg-card/60 w-1.5"
-                      }`}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-
-            {/* Top Badges */}
-            <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
-              <Badge 
-                className={`font-semibold text-xs px-3 py-1.5 rounded-full border-none shadow-sm ${
-                  isAvailable 
-                    ? "bg-primary text-primary-foreground" 
-                    : "bg-muted text-muted-foreground"
-                }`}
-              >
-                {isAvailable ? "Available" : "Booked"}
+          {/* Top Badges */}
+          <div className="absolute top-4 left-4 flex gap-2">
+            {isTopSelling && (
+              <Badge className="bg-gradient-to-r from-primary to-gold-light text-primary-foreground border-none shadow-gold font-semibold">
+                <Star className="w-3 h-3 mr-1 fill-current" />
+                Top Rated
               </Badge>
-              {isTopSelling && (
-                <Badge className="bg-card text-foreground font-medium px-3 py-1.5 rounded-full shadow-sm border border-border/50 flex items-center gap-1">
-                  <Star className="w-3 h-3 text-primary fill-primary" />
-                  Top Rated
-                </Badge>
-              )}
-            </div>
+            )}
+            {category && (
+              <Badge className="bg-background/80 backdrop-blur-sm text-foreground border-none capitalize">
+                {category}
+              </Badge>
+            )}
+          </div>
 
-            {/* Rating */}
-            <div className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 bg-card/95 backdrop-blur-sm rounded-full shadow-sm">
-              <Star className="w-3.5 h-3.5 text-primary fill-primary" />
-              <span className="text-foreground text-sm font-semibold">{rating}</span>
-            </div>
+          {/* Availability Badge */}
+          <Badge 
+            className={`absolute top-4 right-4 font-semibold text-xs px-3 py-1.5 rounded-full border-none ${
+              isAvailable 
+                ? "bg-emerald-500/90 text-white" 
+                : "bg-red-500/90 text-white"
+            }`}
+          >
+            {isAvailable ? "Available" : "Booked"}
+          </Badge>
 
-            {/* Quick Actions */}
-            <div className="absolute bottom-3 right-3 flex gap-2 z-20">
-              <Button
-                size="icon"
-                variant="secondary"
-                className="rounded-full w-10 h-10 bg-card/95 hover:bg-card text-foreground shadow-sm"
-                onClick={handleShare}
-                title="Share"
+          {/* Image Navigation */}
+          {displayImages.length > 1 && (
+            <>
+              <button 
+                onClick={prevImage}
+                className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-card/90 hover:bg-card text-foreground opacity-0 group-hover:opacity-100 transition-all z-10"
               >
-                <Share2 className="w-4 h-4" />
-              </Button>
-              <Button
-                size="icon"
-                className="rounded-full w-10 h-10 bg-primary hover:bg-teal-light text-primary-foreground shadow-teal"
-                onClick={handleBookNow}
-                title="Book Now"
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button 
+                onClick={nextImage}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-card/90 hover:bg-card text-foreground opacity-0 group-hover:opacity-100 transition-all z-10"
               >
-                <MessageCircle className="w-4 h-4" />
-              </Button>
-            </div>
+                <ChevronRight className="w-4 h-4" />
+              </button>
+              
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
+                {displayImages.slice(0, 5).map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setCurrentImageIndex(index);
+                    }}
+                    className={`w-2 h-2 rounded-full transition-all ${
+                      index === currentImageIndex
+                        ? "bg-primary w-6"
+                        : "bg-foreground/50 hover:bg-foreground/80"
+                    }`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
 
-            {/* Location */}
-            <div className="absolute bottom-3 left-3 flex items-center gap-1.5 text-card text-sm z-20 bg-navy/60 backdrop-blur-sm px-3 py-1.5 rounded-full">
-              <MapPin className="w-3.5 h-3.5" />
-              <span className="font-medium">{location}</span>
+          {/* Quick Actions */}
+          <div className="absolute bottom-4 right-4 flex gap-2 z-20">
+            <Button
+              size="icon"
+              variant="secondary"
+              className="rounded-full w-10 h-10 bg-card/90 hover:bg-card text-foreground"
+              onClick={handleShare}
+            >
+              <Share2 className="w-4 h-4" />
+            </Button>
+            <Button
+              size="icon"
+              className="rounded-full w-10 h-10 bg-primary hover:bg-gold-light text-primary-foreground shadow-gold"
+              onClick={handleBookNow}
+            >
+              <MessageCircle className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-6">
+          {/* Location & Rating */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
+              <MapPin className="w-4 h-4" />
+              <span>{location}</span>
+            </div>
+            <div className="flex items-center gap-1 text-primary">
+              <Star className="w-4 h-4 fill-current" />
+              <span className="font-semibold">{rating}</span>
             </div>
           </div>
 
-          {/* Content */}
-          <div className="p-5">
-            <h3 className="font-display text-xl font-semibold text-foreground mb-3 line-clamp-1 group-hover:text-primary transition-colors duration-300">
-              {title}
-            </h3>
+          {/* Title */}
+          <h3 className="font-display text-xl font-semibold text-foreground mb-4 line-clamp-1 group-hover:text-primary transition-colors">
+            {title}
+          </h3>
 
-            {/* Amenities */}
-            <div className="flex flex-wrap gap-2 mb-4">
-              {amenities.slice(0, 3).map((amenity, index) => (
-                <span
-                  key={index}
-                  className="text-xs font-medium px-2.5 py-1 bg-secondary text-muted-foreground rounded-lg"
-                >
-                  {amenity}
-                </span>
-              ))}
+          {/* Amenities */}
+          <div className="flex gap-2 mb-5 flex-wrap">
+            {amenities.slice(0, 3).map((amenity, index) => (
+              <span
+                key={index}
+                className="text-xs text-muted-foreground bg-secondary px-3 py-1.5 rounded-full"
+              >
+                {amenity}
+              </span>
+            ))}
+          </div>
+
+          {/* Price */}
+          <div className="flex items-center justify-between pt-4 border-t border-border/50">
+            <div className="flex items-baseline gap-1">
+              <span className="text-2xl font-display font-bold text-gradient-gold">{price}</span>
+              <span className="text-sm text-muted-foreground">/ {priceNote}</span>
             </div>
-
-            <div className="flex items-center justify-between pt-4 border-t border-border/50">
-              <div>
-                <span className="text-2xl font-display font-bold text-primary">
-                  {price}
-                </span>
-                <span className="text-muted-foreground text-xs ml-1">/{priceNote}</span>
-              </div>
-
-              <Button variant="ghost" className="text-primary font-semibold p-0 h-auto hover:bg-transparent hover:text-teal-dark group/link">
-                View Details
-                <span className="inline-block transition-transform group-hover/link:translate-x-1 ml-1">→</span>
-              </Button>
+            <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+              <ArrowUpRight className="w-5 h-5" />
             </div>
           </div>
         </div>

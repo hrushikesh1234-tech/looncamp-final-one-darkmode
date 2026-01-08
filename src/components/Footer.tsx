@@ -1,139 +1,148 @@
-import { Instagram, Phone, Mail, MapPin, ArrowUpRight, Compass } from "lucide-react";
-
-const quickLinks = [
-  { name: "Properties", href: "#properties" },
-  { name: "Destinations", href: "#destinations" },
-  { name: "About Us", href: "#" },
-  { name: "FAQs", href: "#" },
-];
+import { MapPin, Phone, Mail, Instagram, Facebook, Youtube } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
-  return (
-    <footer id="contact" className="bg-foreground text-background relative overflow-hidden">
-      {/* Decorative Elements */}
-      <div className="absolute top-0 right-0 w-80 h-80 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+  const scrollToSection = (href: string) => {
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
-      <div className="container mx-auto px-6 relative">
-        {/* Main Footer Content */}
-        <div className="py-16 md:py-20 grid md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-8">
+  return (
+    <footer id="contact" className="bg-secondary/50 border-t border-border/30">
+      {/* Main Footer */}
+      <div className="container mx-auto px-6 py-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-11 h-11 bg-primary rounded-xl flex items-center justify-center">
-                <Compass className="w-5 h-5 text-primary-foreground" />
+            <Link to="/" className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-gold-light flex items-center justify-center">
+                <span className="text-primary-foreground font-display text-xl font-bold">L</span>
               </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-display font-semibold tracking-tight text-background">
-                  LoonCamp
-                </span>
-                <span className="text-background/50 text-[10px] tracking-[0.15em] uppercase">
-                  Nature Retreats
-                </span>
-              </div>
-            </div>
-            <p className="text-background/60 text-sm leading-relaxed mb-6">
-              Curating extraordinary escapes at Pawna Lake and Lonavala.
-              Experience nature, luxury, and unforgettable memories.
+              <span className="font-display text-2xl font-bold text-foreground">LoonCamp</span>
+            </Link>
+            <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+              Curating extraordinary stays for discerning travelers. Experience luxury in nature's embrace.
             </p>
             <div className="flex gap-3">
               <a
-                href="https://www.instagram.com/leestays/"
+                href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 flex items-center justify-center rounded-xl bg-background/10 hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-                aria-label="Follow on Instagram"
+                className="w-10 h-10 rounded-full bg-card flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
               >
-                <Instagram size={18} />
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-card flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+              >
+                <Facebook className="w-5 h-5" />
+              </a>
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-card flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+              >
+                <Youtube className="w-5 h-5" />
               </a>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-display text-lg font-semibold mb-6 text-background">
-              Quick Links
-            </h4>
-            <ul className="space-y-3">
-              {quickLinks.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="group flex items-center gap-2 text-background/60 hover:text-primary transition-colors duration-300 text-sm"
-                  >
-                    <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <h4 className="font-display text-lg font-semibold text-foreground mb-6">Quick Links</h4>
+            <nav className="flex flex-col gap-3">
+              <button
+                onClick={() => scrollToSection("#properties")}
+                className="text-muted-foreground hover:text-primary text-left text-sm transition-colors"
+              >
+                Properties
+              </button>
+              <button
+                onClick={() => scrollToSection("#destinations")}
+                className="text-muted-foreground hover:text-primary text-left text-sm transition-colors"
+              >
+                Destinations
+              </button>
+              <Link
+                to="/about"
+                className="text-muted-foreground hover:text-primary text-sm transition-colors"
+              >
+                About Us
+              </Link>
+              <Link
+                to="/contact"
+                className="text-muted-foreground hover:text-primary text-sm transition-colors"
+              >
+                Contact
+              </Link>
+            </nav>
           </div>
 
           {/* Contact */}
           <div>
-            <h4 className="font-display text-lg font-semibold mb-6 text-background">
-              Get in Touch
-            </h4>
+            <h4 className="font-display text-lg font-semibold text-foreground mb-6">Contact</h4>
             <div className="space-y-4">
-              <a
-                href="tel:+918669505727"
-                className="flex items-center gap-3 text-background/60 hover:text-primary transition-colors duration-300 text-sm"
-              >
-                <div className="w-9 h-9 flex items-center justify-center rounded-xl bg-background/10">
-                  <Phone size={16} />
-                </div>
-                <span>+91 8669 505 727</span>
-              </a>
-              <a
-                href="mailto:hrushikeshmore953@gmail.com"
-                className="flex items-center gap-3 text-background/60 hover:text-primary transition-colors duration-300 text-sm"
-              >
-                <div className="w-9 h-9 flex items-center justify-center rounded-xl bg-background/10">
-                  <Mail size={16} />
-                </div>
-                <span>hrushikeshmore953@gmail.com</span>
-              </a>
-              <div className="flex items-start gap-3 text-background/60 text-sm">
-                <div className="w-9 h-9 flex items-center justify-center rounded-xl bg-background/10 flex-shrink-0">
-                  <MapPin size={16} />
-                </div>
-                <span>Pawna Lake, Lonavala,<br />Maharashtra, India</span>
+              <div className="flex items-start gap-3">
+                <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                <p className="text-muted-foreground text-sm">
+                  Pawna Lake, Lonavala,<br />Maharashtra, India
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="w-5 h-5 text-primary shrink-0" />
+                <a href="tel:+918669505727" className="text-muted-foreground text-sm hover:text-primary transition-colors">
+                  +91 86695 05727
+                </a>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail className="w-5 h-5 text-primary shrink-0" />
+                <a href="mailto:hello@looncamp.com" className="text-muted-foreground text-sm hover:text-primary transition-colors">
+                  hello@looncamp.com
+                </a>
               </div>
             </div>
           </div>
 
-          {/* CTA */}
+          {/* Newsletter */}
           <div>
-            <h4 className="font-display text-lg font-semibold mb-6 text-background">
-              Ready to Escape?
-            </h4>
-            <p className="text-background/60 text-sm mb-6">
-              Get in touch for personalized recommendations and special offers.
+            <h4 className="font-display text-lg font-semibold text-foreground mb-6">Newsletter</h4>
+            <p className="text-muted-foreground text-sm mb-4">
+              Subscribe for exclusive offers and travel inspiration.
             </p>
-            <a
-              href="https://api.whatsapp.com/send?phone=+918669505727&text=I%27m%20interested%20in%20booking"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-teal-light transition-all duration-300 shadow-teal hover:scale-105"
-            >
-              Start Planning
-              <ArrowUpRight size={16} />
-            </a>
+            <div className="flex gap-2">
+              <input
+                type="email"
+                placeholder="Your email"
+                className="flex-1 px-4 py-2.5 rounded-lg bg-card border border-border/50 text-foreground text-sm focus:outline-none focus:border-primary transition-colors"
+              />
+              <Button className="bg-gradient-to-r from-primary to-gold-light text-primary-foreground hover:opacity-90 px-4">
+                Subscribe
+              </Button>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Bottom Bar */}
-        <div className="py-6 border-t border-background/10 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-background/40 text-sm">
-            © {new Date().getFullYear()} LoonCamp. All rights reserved.
+      {/* Bottom Bar */}
+      <div className="border-t border-border/30">
+        <div className="container mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-muted-foreground text-sm">
+            © 2024 LoonCamp. All rights reserved.
           </p>
-          <div className="flex items-center gap-6 text-sm text-background/40">
-            <a href="#" className="hover:text-primary transition-colors duration-300">
+          <div className="flex gap-6">
+            <Link to="/privacy" className="text-muted-foreground text-sm hover:text-primary transition-colors">
               Privacy Policy
-            </a>
-            <a href="#" className="hover:text-primary transition-colors duration-300">
+            </Link>
+            <Link to="/terms" className="text-muted-foreground text-sm hover:text-primary transition-colors">
               Terms of Service
-            </a>
+            </Link>
           </div>
         </div>
       </div>
