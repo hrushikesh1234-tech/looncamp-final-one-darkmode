@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,44 +16,11 @@ const AdminLogin = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (session?.user) {
-          // Check if user is admin
-          const { data: roles } = await supabase
-            .from('user_roles')
-            .select('role')
-            .eq('user_id', session.user.id)
-            .eq('role', 'admin')
-            .single();
-          
-          if (roles) {
-            navigate('/admin');
-          }
-        }
-        setIsCheckingAuth(false);
-      }
-    );
-
-    // Check for existing session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      if (session?.user) {
-        const { data: roles } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', session.user.id)
-          .eq('role', 'admin')
-          .single();
-        
-        if (roles) {
-          navigate('/admin');
-        }
-      }
-      setIsCheckingAuth(false);
-    });
-
-    return () => subscription.unsubscribe();
+    const token = localStorage.getItem('adminToken');
+    if (token) {
+      navigate('/admin');
+    }
+    setIsCheckingAuth(false);
   }, [navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -72,44 +38,31 @@ const AdminLogin = () => {
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
       });
 
-      if (error) {
-        toast({
-          title: 'Login Failed',
-          description: error.message,
-          variant: 'destructive',
-        });
-        return;
-      }
+      const result = await response.json();
 
-      if (data.user) {
-        // Check if user has admin role
-        const { data: roles, error: roleError } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', data.user.id)
-          .eq('role', 'admin')
-          .single();
-
-        if (roleError || !roles) {
-          await supabase.auth.signOut();
-          toast({
-            title: 'Access Denied',
-            description: 'You do not have admin privileges.',
-            variant: 'destructive',
-          });
-          return;
-        }
-
+      if (result.success) {
+        localStorage.setItem('adminToken', result.data.token);
+        localStorage.setItem('adminUser', JSON.stringify(result.data.admin));
+        
         toast({
           title: 'Welcome back!',
           description: 'Login successful.',
         });
         navigate('/admin');
+      } else {
+        toast({
+          title: 'Login Failed',
+          description: result.message || 'Invalid credentials',
+          variant: 'destructive',
+        });
       }
     } catch (error) {
       toast({

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -8,7 +7,6 @@ import {
   Home, 
   Building2, 
   Calendar, 
-  Users, 
   Settings,
   Plus,
   Loader2,
@@ -28,58 +26,45 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const token = localStorage.getItem('adminToken');
+      const adminData = localStorage.getItem('adminUser');
       
-      if (!session?.user) {
+      if (!token || !adminData) {
         navigate('/admin/login');
         return;
       }
 
-      // Check admin role
-      const { data: roles } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', session.user.id)
-        .eq('role', 'admin')
-        .single();
-
-      if (!roles) {
-        await supabase.auth.signOut();
-        navigate('/admin/login');
-        return;
-      }
-
-      setUser(session.user);
+      setUser(JSON.parse(adminData));
       
-      // Fetch stats
-      const [propertiesRes, bookingsRes, activeRes] = await Promise.all([
-        supabase.from('properties').select('id', { count: 'exact' }),
-        supabase.from('bookings').select('id', { count: 'exact' }),
-        supabase.from('properties').select('id', { count: 'exact' }).eq('is_active', true),
-      ]);
-
-      setStats({
-        properties: propertiesRes.count || 0,
-        bookings: bookingsRes.count || 0,
-        activeProperties: activeRes.count || 0,
-      });
+      try {
+        const response = await fetch('/api/properties/list', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+          const properties = result.data || [];
+          setStats({
+            properties: properties.length,
+            bookings: 0, // Bookings might need a separate endpoint
+            activeProperties: properties.filter((p: any) => p.is_active).length,
+          });
+        }
+      } catch (error) {
+        console.error('Fetch stats error:', error);
+      }
 
       setIsLoading(false);
     };
 
     checkAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_OUT') {
-        navigate('/admin/login');
-      }
-    });
-
-    return () => subscription.unsubscribe();
   }, [navigate]);
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminUser');
     toast({
       title: 'Logged out',
       description: 'You have been signed out successfully.',
